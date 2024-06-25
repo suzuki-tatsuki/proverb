@@ -1,2 +1,3 @@
 /target
 /.env
+/spreadsheet_priv_key.json
