@@ -23,7 +23,6 @@ async fn main() -> std::result::Result<(), String> {
         .filter(|x| x.rarity == data::Rarity::SuperRare)
         .collect::<Vec<&data::Data>>();
 
-    send::send();
-
+    send::send(&discord_token).await;
     Ok(())
 }
