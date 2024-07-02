@@ -8,18 +8,18 @@ use std::env;
 #[tokio::main]
 async fn main() -> std::result::Result<(), String> {
     dotenv().expect(".env file not loaded");
-    let sheet_id = env::var("SPREAD_SHEET_ID").expect("SPREAD_SHEET_ID not found");
+    let sheet_id = env::var("SPREADSHEET_ID").expect("SPREADSHEET_ID not found");
     let discord_token = env::var("DISCORD_TOKEN").expect("DISCORD_TOKEN not found");
 
-    let data = get::get_data(&sheet_id).await?;
+    let proverbs = get::get_data(&sheet_id).await?;
 
-    let common = data.iter()
+    let common = proverbs.iter()
         .filter(|x| x.rarity == data::Rarity::Common)
         .collect::<Vec<&data::Data>>();
-    let rare = data.iter()
+    let rare = proverbs.iter()
         .filter(|x| x.rarity == data::Rarity::Rare)
         .collect::<Vec<&data::Data>>();
-    let super_rare = data.iter()
+    let super_rare = proverbs.iter()
         .filter(|x| x.rarity == data::Rarity::SuperRare)
         .collect::<Vec<&data::Data>>();
 
