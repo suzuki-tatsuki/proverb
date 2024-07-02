@@ -16,6 +16,7 @@ impl Data {
     }
 }
 
+#[derive(PartialEq, Eq)]
 pub enum Rarity {
     Common,
     Rare,
