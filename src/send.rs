@@ -4,11 +4,7 @@ use serenity::model::gateway::Ready;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
 
-use std::env;
-
 struct Handler;
-
-const TOKEN_NAME: &str = "DISCORD_TOKEN";
 
 #[async_trait]
 impl EventHandler for Handler {
@@ -25,11 +21,7 @@ impl EventHandler for Handler {
     }
 }
 
-#[tokio::main]
-async fn connector() {
-    let token = env::var(TOKEN_NAME)
-        .expect("expected a token in the environment");
-
+pub async fn send(token: &str) {
     let intents = GatewayIntents::GUILD_MESSAGES
         | GatewayIntents::MESSAGE_CONTENT;
 
@@ -42,8 +34,4 @@ async fn connector() {
     if let Err(why) = client.start().await {
         println!("client error: {why:?}");
     }
-}
- 
-pub fn send() {
-    connector();
 }

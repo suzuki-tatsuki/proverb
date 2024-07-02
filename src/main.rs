@@ -13,5 +13,5 @@ async fn main() {
 
     let data = get::get_data(&sheet_id).await;
 
-    send::send();
+    send::send(&discord_token).await;
 }
