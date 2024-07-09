@@ -23,7 +23,8 @@ fn lottery() {
         rarity = "super_rare";
     }
 
-    println!("n: {}, rarity: {}", n, rarity); // for test
+    // for debug
+    println!("n: {}, rarity: {}", n, rarity);
 }
 
 #[async_trait]
