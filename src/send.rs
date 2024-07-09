@@ -1,3 +1,5 @@
+use crate::data;
+
 use serenity::async_trait;
 use serenity::model::gateway::GatewayIntents;
 use serenity::model::gateway::Ready;
@@ -9,8 +11,8 @@ struct Handler;
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "School::school_content" {
-            if let Err(why) = msg.channel_id.say(&ctx.http, "school_message").await {
+        if msg.content == "proverb" {
+            if let Err(why) = msg.channel_id.say(&ctx.http, "test").await {
                 println!("Error sending message: {why:?}");
             }
         }
@@ -21,7 +23,7 @@ impl EventHandler for Handler {
     }
 }
 
-pub async fn send(token: &str) {
+pub async fn send(token: &str, common: Vec<&data::Data>, rare: Vec<&data::Data>, super_rare: Vec<&data::Data>) {
     let intents = GatewayIntents::GUILD_MESSAGES
         | GatewayIntents::MESSAGE_CONTENT;
 
