@@ -10,6 +10,7 @@ async fn main() -> std::result::Result<(), String> {
     dotenv().expect(".env file not loaded");
     let sheet_id = env::var("SPREADSHEET_ID").expect("SPREADSHEET_ID not found");
     let discord_token = env::var("DISCORD_TOKEN").expect("DISCORD_TOKEN not found");
+    let channel_id = env::var("CHANNEL_ID").expect("CHANNLE_ID not found");
 
     let proverbs = get::get_data(&sheet_id).await?;
 
@@ -23,6 +24,6 @@ async fn main() -> std::result::Result<(), String> {
         .filter(|x| x.rarity == data::Rarity::SuperRare)
         .collect::<Vec<&data::Data>>();
 
-    send::send(&discord_token, common, rare, super_rare).await;
+    send::send(&discord_token, &channel_id, common, rare, super_rare).await;
     Ok(())
 }

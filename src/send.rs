@@ -54,9 +54,10 @@ impl EventHandler for Handler {
 }
 */
 
-pub async fn send(token: &str, common: Vec<&data::Data>, rare: Vec<&data::Data>, super_rare: Vec<&data::Data>) {
+pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec<&data::Data>, super_rare: Vec<&data::Data>) {
     let http = Http::new(token);
-    let channel_id = ChannelId::new(123456789012345678); // ここに実際のチャンネルIDを設定
+    let id_num: u64 = id_str.parse().expect("Failed to parse number");
+    let channel_id = ChannelId::new(id_num); // ここに実際のチャンネルIDを設定
 
     //let message_content = format!("Common data: {:?}", common::proverb);
 
