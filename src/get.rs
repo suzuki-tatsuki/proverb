@@ -3,7 +3,7 @@ use crate::data::Data;
 use google_sheets4::{
     api::ValueRange,
     hyper::{client::HttpConnector, Client},
-    hyper_rustls::{HttpsConnector, HttpsConnectorBuilder},
+    hyper_rustls::{ HttpsConnector, HttpsConnectorBuilder},
     oauth2::{
         authenticator::Authenticator, read_service_account_key, ServiceAccountAuthenticator,
         ServiceAccountKey,
@@ -26,6 +26,7 @@ pub async fn get_data(sheet_id: &str) -> GetResult<Vec<Data>> {
 fn http_client() -> Client<HttpsConnector<HttpConnector>> {
     let connector = HttpsConnectorBuilder::new()
         .with_native_roots()
+        .unwrap()
         .https_only()
         .enable_http1()
         .build();
