@@ -15,7 +15,7 @@ use rand::Rng;
 
 //struct Handler;
 
-fn lottery() -> &'static str {
+fn __lottery() -> &'static str {
     // choose rarity
     let mut rng = rand::thread_rng();
     let n: i32 = rng.gen_range(0..10); // create number from 0-9
@@ -34,34 +34,35 @@ fn lottery() -> &'static str {
     rarity
 }
 
-/*
-#[async_trait]
-impl EventHandler for Handler {
-    async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "proverb" {
-            lottery();
+fn lottery(range: i32) -> i32 {
+    let mut rng = rand::thread_rng();
+    let n: i32 = rng.gen_range(0..range); // create number from 0-9
 
-            // send message
-            if let Err(why) = msg.channel_id.say(&ctx.http, "test").await {
-                println!("Error sending message: {why:?}");
-            }
-        }
-    }
-
-    async fn ready(&self, _: Context, ready: Ready) {
-        println!("{} is connected!", ready.user.name);
-    }
+    n
 }
-*/
 
 pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec<&data::Data>, super_rare: Vec<&data::Data>) {
     let http = Http::new(token);
     let id_num: u64 = id_str.parse().expect("Failed to parse number");
     let channel_id = ChannelId::new(id_num); // ここに実際のチャンネルIDを設定
 
-    //let message_content = format!("Common data: {:?}", common::proverb);
+    let r_num: i32 = lottery(10);
 
-    let message_content: &str = lottery();
+    // 0-5(60%): common, 6-8(30%): rare, 9(10%): super-rare
+    let mut rarity: &str = "rare";
+    let mut message_content: &str = "rare";
+
+    if r_num < 6 {
+        rarity = "common";
+        message_content = "common";
+    } else if r_num == 9 {
+        rarity = "super_rare";
+        message_content = "super_rare";
+    }
+
+    // for debug
+    println!("r_num: {}, rarity: {}", r_num, rarity);
+
 
     // sending message content to channel
     if let Err(why) = channel_id.say(&http, message_content).await {
