@@ -1,44 +1,15 @@
-use crate::data;
+use crate::data::{self, Data};
 
 use serenity::http::Http;
 use serenity::model::id::ChannelId;
 
-/*  using gateway
-use serenity::async_trait;
-use serenity::model::gateway::GatewayIntents;
-use serenity::model::gateway::Ready;
-use serenity::model::channel::Message;
-use serenity::prelude::*;
-*/
-
 use rand::Rng;
 
-//struct Handler;
-
-fn __lottery() -> &'static str {
-    // choose rarity
+fn lottery(range: usize) -> usize {
     let mut rng = rand::thread_rng();
-    let n: i32 = rng.gen_range(0..10); // create number from 0-9
+    let num: usize = rng.gen_range(0..range); // create number from 0-9
 
-    // 0-5(60%): common, 6-8(30%): rare, 9(10%): super-rare
-    let mut rarity: &str = "rare";
-    if n < 6 {
-        rarity = "common";
-    } else if n == 9 {
-        rarity = "super_rare";
-    }
-
-    // for debug
-    println!("n: {}, rarity: {}", n, rarity);
-
-    rarity
-}
-
-fn lottery(range: i32) -> i32 {
-    let mut rng = rand::thread_rng();
-    let n: i32 = rng.gen_range(0..range); // create number from 0-9
-
-    n
+    num
 }
 
 pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec<&data::Data>, super_rare: Vec<&data::Data>) {
@@ -46,21 +17,38 @@ pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec
     let id_num: u64 = id_str.parse().expect("Failed to parse number");
     let channel_id = ChannelId::new(id_num); // ここに実際のチャンネルIDを設定
 
-    let r_num: i32 = lottery(10);
+    let r_num: usize = lottery(10);
 
     // 0-5(60%): common, 6-8(30%): rare, 9(10%): super-rare
     let mut rarity: &str = "rare";
-    let mut message_content: &str = "rare";
+    let content: &Data;
 
     if r_num < 6 {
-        rarity = "common";
-        message_content = "common";
+        rarity = "common";  // for console
+
+        let len: usize = common.len();
+        let index: usize = lottery(len);
+        content = &common[index];
     } else if r_num == 9 {
-        rarity = "super_rare";
-        message_content = "super_rare";
+        rarity = "super_rare";  // for cosole
+
+        let len: usize = super_rare.len();
+        let index: usize = lottery(len);
+        content = &super_rare[index];
+    } else {
+        // rarity = rare;   // for console
+
+        let len: usize = rare.len();
+        let index: usize = lottery(len);
+        content = &rare[index];
     }
 
-    // for debug
+    let cnt_speaker = &content.speaker;
+    let cnt_proverb = &content.proverb;
+    let cnt_rarity = &content.rarity;
+    let message_content = format!("### {}\n{} 「{}」", cnt_rarity, cnt_speaker, cnt_proverb);
+
+    // for console
     println!("r_num: {}, rarity: {}", r_num, rarity);
 
 
@@ -68,19 +56,4 @@ pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec
     if let Err(why) = channel_id.say(&http, message_content).await {
         println!("Error sending message: {:?}", why);
     }
-
-    /*  using gateway
-    let intents = GatewayIntents::GUILD_MESSAGES
-        | GatewayIntents::MESSAGE_CONTENT;
-
-    let mut client =
-        Client::builder(&token, intents)
-        .event_handler(Handler)
-        .await
-        .expect("err creating client");
-
-    if let Err(why) = client.start().await {
-        println!("client error: {why:?}");
-    }
-    */
 }
