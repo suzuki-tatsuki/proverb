@@ -32,3 +32,13 @@ impl From<String> for Rarity {
         }
     }
 }
+
+impl std::fmt::Display for Rarity {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match *self {
+            Rarity::Common => write!(f, "☆"),
+            Rarity::Rare => write!(f, "☆☆"),
+            Rarity::SuperRare => write!(f, "☆☆☆"),
+        }
+    }
+}
