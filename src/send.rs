@@ -45,8 +45,9 @@ pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec
 
     let cnt_speaker = &content.speaker;
     let cnt_proverb = &content.proverb;
+    let cnt_date = &content.date;
     let cnt_rarity = &content.rarity;
-    let message_content = format!("### {}\n{} 「{}」", cnt_rarity, cnt_speaker, cnt_proverb);
+    let message_content = format!("{}\n{}「{}」({})", cnt_rarity, cnt_speaker, cnt_proverb, cnt_date);
 
     // for console
     println!("r_num: {}, rarity: {}", r_num, rarity);
