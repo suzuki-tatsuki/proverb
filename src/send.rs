@@ -1,7 +1,9 @@
 use crate::data::{self, Data};
 
+use serenity::all::{CreateMessage, CreateEmbed};
 use serenity::http::Http;
 use serenity::model::id::ChannelId;
+use serenity::model::colour::Colour;
 
 use rand::Rng;
 
@@ -43,18 +45,27 @@ pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec
         content = &rare[index];
     }
 
-    let cnt_speaker = &content.speaker;
-    let cnt_proverb = &content.proverb;
-    let cnt_date = &content.date;
-    let cnt_rarity = &content.rarity;
-    let message_content = format!("{}\n{}「{}」({})", cnt_rarity, cnt_speaker, cnt_proverb, cnt_date);
+    let cnt_speaker = format!("{}", content.speaker);
+    let cnt_proverb = format!("# 「{}」", content.proverb);
+    let cnt_date = format!("{}", content.date);
+    let cnt_rarity = format!("{}", content.rarity);
+    //let message_content = format!("{}\n{}「{}」({})", cnt_rarity, cnt_speaker, cnt_proverb, cnt_date);
 
     // for console
-    println!("r_num: {}, rarity: {}", r_num, rarity);
+    //println!("r_num: {}, rarity: {}", r_num, rarity);
 
-
-    // sending message content to channel
-    if let Err(why) = channel_id.say(&http, message_content).await {
+    if let Err(why) = channel_id.send_message(&http,
+        CreateMessage::new()
+            .content(cnt_proverb)
+            .embed(
+                CreateEmbed::new()
+                    .color(Colour(0xffffff))
+                    //.title(cnt_speaker)
+                    .field("レア度", cnt_rarity, true)
+                    .field("発言者", cnt_speaker, true)
+                    .field("日付", cnt_date, true)
+            )
+    ).await {
         println!("Error sending message: {:?}", why);
     }
 }
