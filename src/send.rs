@@ -17,29 +17,28 @@ fn lottery(range: usize) -> usize {
 pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec<&data::Data>, super_rare: Vec<&data::Data>) {
     let http = Http::new(token);
     let id_num: u64 = id_str.parse().expect("Failed to parse number");
-    let channel_id = ChannelId::new(id_num); // ここに実際のチャンネルIDを設定
+    let channel_id = ChannelId::new(id_num);
 
     let r_num: usize = lottery(100);
 
     // 0-79(80%): common, 80-95(15%): rare, 96-100(5%): super-rare
-    //let mut rarity: &str = "rare";
     let content: &Data;
     let embed_color: Colour;
 
     if r_num < 80 {
-        //rarity = "common";  // for console
+        // common
         let len: usize = common.len();
         let index: usize = lottery(len);
         content = &common[index];
         embed_color = Colour(0x9f7c5c);
     } else if 95 < r_num {
-        //rarity = "super_rare";  // for cosole
+        // super rare
         let len: usize = super_rare.len();
         let index: usize = lottery(len);
         content = &super_rare[index];
         embed_color = Colour(0xffb000);
     } else {
-        // rarity = rare;   // for console
+        // rare
         let len: usize = rare.len();
         let index: usize = lottery(len);
         content = &rare[index];
@@ -59,7 +58,6 @@ pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec
                     .color(embed_color)
                     .title(cnt_speaker)
                     .field("レア度", cnt_rarity, true)
-                    //.field("発言者", cnt_speaker, true)
                     .field("日付", cnt_date, true)
             )
     ).await {
