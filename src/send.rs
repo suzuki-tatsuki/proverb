@@ -24,20 +24,20 @@ pub async fn send(token: &str, id_str: &str, common: Vec<&data::Data>, rare: Vec
     // 0-5(60%): common, 6-8(30%): rare, 9(10%): super-rare
     //let mut rarity: &str = "rare";
     let content: &Data;
-    let mut embed_color: Colour = Colour(0xffffff);
+    let embed_color: Colour;
 
     if r_num < 6 {
         //rarity = "common";  // for console
         let len: usize = common.len();
         let index: usize = lottery(len);
         content = &common[index];
-        embed_color = Colour(0x816d46);
+        embed_color = Colour(0x9f7c5c);
     } else if r_num == 9 {
         //rarity = "super_rare";  // for cosole
         let len: usize = super_rare.len();
         let index: usize = lottery(len);
         content = &super_rare[index];
-        embed_color = Colour(0xf7b946);
+        embed_color = Colour(0xffb000);
     } else {
         // rarity = rare;   // for console
         let len: usize = rare.len();
